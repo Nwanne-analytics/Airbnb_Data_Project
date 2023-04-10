@@ -19,10 +19,8 @@ def get_file_path():
     airbnb_file_path = os.path.join(path,file_path)
     return (airbnb_file_path)
 
-
-#tui.start("loading the airbnb dataset")
-            
-           
+         
+# function to get data from the Airbnb dataset using the host id           
 def get_by_host_id(airbnb_data):
     # ask for user input
     host_id = input("Enter the host id: ").strip()
@@ -66,7 +64,9 @@ def get_by_location(airbnb_data):
             minimum_nights = row[21]
             print(sep)
             print(f"| {host_id:<10} | {host_name:<20} | {property_type:<13} | {price:<10} | {maximum_nights:<14} | {minimum_nights:<14}|")
+
             
+# function to get information by property type
 def get_by_property_type(airbnb_data):
     # get property type from the user
     print("Enter a property type.")
@@ -89,5 +89,68 @@ def get_by_property_type(airbnb_data):
             print(sep)
             print(f"| {property_type:<14} | {room_type:<12} | {accomodates:<11} | {bathrooms:<16} | {bedrooms:<10} | {beds:<10} |")    
 
+            
+# function for own selection
+"""
+Is host a super host? If the user selects yes... get location from the user and return some information.
+Allow the user to be able to play with the score rating he wants to see.
+""" 
+def by_location_superhost(airbnb_data):
+    # get whether the user wants to select a superhost or not
+    print("Enter 'True' to view hosts that are superhosts.")
+    print("Enter 'False' to view hosts that are not superhosts.")
+    is_superhost = input().upper().strip()
+            
+    # get location from user
+    print("Enter a location")
+    location = input().capitalize().strip()
+        
+    # get the review score the user wants to see
+    print("Enter the review rating e.g 4.60")
+    review_rating = (input().strip())
+            
+    # display to the user the selected values
+    print(f"Location: {location}\n")
+    print(f"Superhost: {is_superhost}\n")
+    print(f"Review score rating: {review_rating}\n")
+            
+    #create heading for the result
+    print(f"| {'host_id':<14} | {'host_name':<12} | {'review_scores_location':<20} | {'review_scores_value':<10} | {'instant_bookable':<10} |")
+            
+    # Display the rows
+    for row in airbnb_dataset:
+        host_id = row[0]
+        host_name = row[3]
+        review_scores_rating = row[27]
+        review_scores_location = row[32]
+        review_scores_value = row[33]
+        instant_bookable = row[23]
+        # select the appropriate columns based on the user inputs
+        if row[5] == location and row[27] == review_rating and row[9] == is_superhost:
+            print(sep)
+            print(f"| {host_id:<14} | {host_name:<12} | {review_scores_location:<20} | {review_scores_value:<10} | {instant_bookable:<10} |")
+    else:
+        print("No selection matching your search.")
+        
+
+# function to get average price of stay in each location    
+def average_price(df_airbnb):
+    print(f"The average price of stay in each location are listed below.\n{sep}\n")
+    avg_price = df_airbnb.groupby("host_location")[["price","maximum_nights","minimum_nights"]].mean()
+    return avg_price
+
+
+# function to get the average review score rating for each location
+def average_review_score(df_airbnb):
+    print(f"The average review score rating for each location are listed below.\n{sep}\n")
+    avg_review_score = airbnb_dataset.groupby("host_location")["review_scores_rating"].mean()
+    return avg_review_score
     
 
+# let the user have a sense of the proportion of the number of bedrooms
+def merge(bedroom_list, num_bedroom_list):
+    
+    bedroom_group_tup = [(bedroom_list[i], num_bedroom_list[i]) for i in range(0, len(bedroom_list))]
+    
+    for i,j in bedroom_group_tup:
+        print(f'The listings with {i} bedrooms are {j} in number. \n')   
