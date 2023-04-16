@@ -36,7 +36,7 @@ def get_by_host_id(airbnb_data):
             host_location = row[5]
             host_since = row[4]
                     
-            # display the information to the user based on host id
+    # display the information to the user based on host id
     print(f"{sep}\nThe details of Host {host_id} are:\n")
     print(f"{sep}\nThe name of listing is: {name_of_listing}\n")
     print(f"{sep}\nThe host name is : {host_name}\n")
@@ -145,7 +145,29 @@ def average_review_score(df_airbnb):
     print(f"The average review score rating for each location are listed below.\n{sep}\n")
     avg_review_score = airbnb_dataset.groupby("host_location")["review_scores_rating"].mean()
     return avg_review_score
+  
     
+# own selection for question b
+"""
+Function to take location from the user and return the room types available in that location. The function will also calculate
+and display the overall rating for each room type available and the average price for each room type.
+"""
+def best_rating_price(df_airbnb):
+    # copy the airbnb dataset not to change the original dataset
+    df_airbnb_copy = df_airbnb.copy()
+    # calculate the overall rating based on all the ratings in the dataset
+    df_airbnb_copy["overall_rating"] = (df_airbnb_copy["review_scores_rating"]+df_airbnb_copy["review_scores_accuracy"]+df_airbnb_copy["review_scores_cleanliness"]+df_airbnb_copy["review_scores_checkin"]+df_airbnb_copy["review_scores_communication"]+df_airbnb_copy["review_scores_location"]+df_airbnb_copy["review_scores_value"])/7
+    # group by the location and room type and select the price and overall rating
+    best_rating_price = df_airbnb_copy.groupby(["host_location", "room_type"])[["overall_rating", "price"]].mean().reset_index()
+    #sort the values
+    best_rating_price.sort_values(["overall_rating", "price"], ascending=True, inplace=False)
+    # get the location the user is interested in, ensure the first letter is capitalized and remove any white spaces
+    location = input("Enter the location: ").capitalize().strip()
+    best = best_price_rating.loc[best_price_rating["host_location"] == location, :]
+    # let the user see the display highlighting the overall rating and the price
+    best = best.style.background_gradient(cmap="Purples", low=0.30)
+    return best
+
 
 # let the user have a sense of the proportion of the number of bedrooms
 def merge(bedroom_list, num_bedroom_list):
