@@ -4,13 +4,14 @@
 # importing modules
 import os
 import airbnb_tui
+import pandas as pd
 
 sep = "."*124
 
 # function to get file path from the user
 def get_file_path():
     path = "Data/"
-    print("Enter the name of the dataset you want to load (with no file extension): ")
+    print("Enter the name of the dataset you want to load: ")
     file_path = input()
     # keep asking the user to input the correct file path until it is correct
     while file_path != "Airbnb_UK_2022.csv":
@@ -118,7 +119,7 @@ def by_location_superhost(airbnb_data):
     print(f"| {'host_id':<14} | {'host_name':<12} | {'review_scores_location':<20} | {'review_scores_value':<10} | {'instant_bookable':<10} |")
             
     # Display the rows
-    for row in airbnb_dataset:
+    for row in airbnb_data:
         host_id = row[0]
         host_name = row[3]
         review_scores_rating = row[27]
@@ -132,6 +133,33 @@ def by_location_superhost(airbnb_data):
     else:
         print("No selection matching your search.")
         
+        
+# function to show the ten(10) most popular amenities
+def top_10_amenities(airbnb_data):
+    amenities = airbnb_data['amenities'].to_list()
+    amenities = [eval(i) for i in amenities] #the previous function returns the list as a string, hence eval
+
+    # created a big list and appended all the items in the amenities into it.
+    amenities_list = []
+    for i in amenities:
+        amenities_list.extend(i)
+
+    # turn the list into a pandas series and count all items    
+    count = pd.Series(amenities_list).value_counts().head(10)
+    
+    # display nicely to the user
+    print("These are the top 10 amenities provided by the hosts.\n")
+    print(f"Top 1: Smoke alarm was provided by {count[0]} hosts.\n")
+    print(f"Top 2: Kitchen was provided by {count[1]} hosts.\n")
+    print(f"Top 3: Essentials was provided by {count[2]} hosts.\n")
+    print(f"Top 4: Wifi was provided by {count[3]} hosts.\n")
+    print(f"Top 5: Iron was provided by {count[4]} hosts.\n")
+    print(f"Top 6: Hangers was provided by {count[5]} hosts.\n")
+    print(f"Top 7: Hot water was provided by {count[6]} hosts.\n")
+    print(f"Top 8: Long term stays allowed was provided by {count[7]} hosts.\n")
+    print(f"Top 9: Dishes and silverware was provided by {count[8]} hosts.\n")
+    print(f"Top 10: Hair dryer was provided by {count[9]} hosts.")
+
 
 # function to get average price of stay in each location    
 def average_price(df_airbnb):
@@ -143,7 +171,7 @@ def average_price(df_airbnb):
 # function to get the average review score rating for each location
 def average_review_score(df_airbnb):
     print(f"The average review score rating for each location are listed below.\n{sep}\n")
-    avg_review_score = airbnb_dataset.groupby("host_location")["review_scores_rating"].mean()
+    avg_review_score = df_airbnb.groupby("host_location")["review_scores_rating"].mean()
     return avg_review_score
   
     
@@ -163,7 +191,7 @@ def best_rating_price(df_airbnb):
     best_rating_price.sort_values(["overall_rating", "price"], ascending=True, inplace=False)
     # get the location the user is interested in, ensure the first letter is capitalized and remove any white spaces
     location = input("Enter the location: ").capitalize().strip()
-    best = best_price_rating.loc[best_price_rating["host_location"] == location, :]
+    best = best_rating_price.loc[best_rating_price["host_location"] == location, :]
     # let the user see the display highlighting the overall rating and the price
     best = best.style.background_gradient(cmap="Purples", low=0.30)
     return best
