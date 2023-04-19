@@ -1,5 +1,7 @@
 #importing the needed modules
 import airbnb_tui
+import matplotlib.pyplot as plt
+import pandas as pd
 #import airbnb_process
 
  
@@ -16,7 +18,8 @@ def proportion_bedrooms(df_airbnb):
     plt.legend(loc="best",bbox_to_anchor=(1,1))
 
     plt.show()
-    fig.savefig('proportion_bedrooms')
+    #return a
+    #fig.savefig('proportion_bedrooms')
 
 def num_listings_roomtype(df_airbnb):
     room_type_group = df_airbnb.groupby("room_type").size().sort_values(ascending=False)
@@ -28,6 +31,7 @@ def num_listings_roomtype(df_airbnb):
     # label
     plt.xlabel("Room Type")
     plt.ylabel("Number of Listing")
+    plt.yticks(range(0, 10000, 500))
     # set title
     plt.title("Number of Listing for Each Room Type")
     #show the graph
@@ -158,6 +162,8 @@ I am interested in knowing whether the customers spend more nights in listings w
 """
 # own selection for question c
 def own_selection_c(df_airbnb):
+    # convert the host_since column to a datetime
+    df_airbnb["host_since"] = pd.to_datetime(df_airbnb["host_since"])
     # filter year 2019
     year_2019 = df_airbnb.query("host_since >= '2019-01-01' and host_since <= '2019-12-31'")
     # filter year 2020
@@ -198,6 +204,7 @@ def own_selection_c(df_airbnb):
     y = [y1,y2,y3,y4]
     # plot line graph for axis1
     for i in range(len(y)):
+        years = [2019, 2020, 2021, 2022]
         ax1.plot(x,y[i],'o-',label=years[i])
 
     # set titles and labels
