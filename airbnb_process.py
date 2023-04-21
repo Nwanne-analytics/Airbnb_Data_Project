@@ -40,12 +40,14 @@ def get_by_host_id(airbnb_data):
                     host_since = row[4]
     
             # display the information to the user based on host id
-            print(f"{sep}\nThe details of Host {host_id} are:\n")
-            print(f"{sep}\nThe name of listing is: {name_of_listing}\n")
-            print(f"{sep}\nThe host name is : {host_name}\n")
-            print(f"{sep}\nThe date created by host: {host_since}\n")
-            print(f"{sep}\nThe host location is: {host_location}\n")
-            print(f"{sep}\nThe description is: {description}.\n{sep}")
+            
+            # display the information to the user based on host id
+            print(f"{sep}\nThe details of \033[1mHost {host_id}\033[0m are:\n")
+            print(f"{sep}\n\033[1mThe name of listing is:\033[0m {name_of_listing}\n")
+            print(f"{sep}\n\033[1mThe host name is:\033[0m {host_name}\n")
+            print(f"{sep}\n\033[1mThe date created by host:\033[0m {host_since}\n")
+            print(f"{sep}\n\033[1mThe host location is:\033[0m {host_location}\n")
+            print(f"{sep}\n\033[1mThe description is:\033[0m {description}.\n{sep}")
             break
         except UnboundLocalError:
             airbnb_tui.error()
@@ -56,10 +58,10 @@ def get_by_host_id(airbnb_data):
 def get_by_location(airbnb_data):
     # get location from user
     print("Enter a location")
-    location = input().capitalize()
-    print(f"You have selected {location} as your location.")
+    location = input().capitalize().strip()
+    print(f"You have selected \033[1m{location}\033[0m as your location.")
     print(f"\nThe host name, property type, price mainimum and maximum nights for listings in {location} are listed below:\n{sep}\n")
-    print(f"| {'host_id':<10} | {'host_name':<20} | {'property_type':<10} | {'price':<10} | {'maximum_nights':<14} | {'minimum_nights':<10}|\n{sep}")
+    print(f"| \033[1m{'host_id':<10}\033[0m | \033[1m{'host_name':<25}\033[0m | \033[1m{'property_type':<18}\033[0m | \033[1m{'price':<10}\033[0m | \033[1m{'maximum_nights':<14}\033[0m | \033[1m{'minimum_nights':<10}\033[0m |\n{sep}")
      
     # Display the appropriate columns and rows
     for row in airbnb_data:
@@ -69,12 +71,11 @@ def get_by_location(airbnb_data):
             property_type = row[13]
             price = row[20]
             maximum_nights = row[22]
-            minimum_nights = row[21]
-            print(sep)
-            print(f"| {host_id:<10} | {host_name:<20} | {property_type:<13} | {price:<10} | {maximum_nights:<14} | {minimum_nights:<14}|")
-        else:
-            break
-    print(f"No listing for '{location}' found!")
+            minimum_nights = row[21]        
+            print(f"| {host_id:<10} | {host_name:<25} | {property_type:<18} | {price:<10} | {maximum_nights:<14} | {minimum_nights:<15}|")
+    if location != row[5]:
+        airbnb_tui.error(f"No listing for '{location}' found!")
+
 
             
 # function to get information by property type
@@ -83,9 +84,9 @@ def get_by_property_type(airbnb_data):
     print("Enter a property type:")
     property_type = input().lower().strip()
             
-    print(f"You have selected {property_type} as the type of property you want to retrieve.\n")
+    print(f"You have selected \033[1m{property_type}\033[0m as the type of property you want to retrieve.\n")
     print(f"The room type, accomodates, bathrooms, bedroom and beds for listings of {property_type} are listed below:\n{sep}\n")
-    print(f"| {'room_type':<12} | {'accomodates':<11} | {'bathrooms':<16} | {'bedroom':<10} | {'beds':<10}|\n")
+    print(f"| \033[1m{'room_type':<12}\033[0m | \033[1m{'accomodates':<11}\033[0m | \033[1m{'bathrooms':<16}\033[0m | \033[1m{'bedroom':<10}\033[0m | \033[1m{'beds':<10}\033[0m |")
      
     # Display the rows
     for row in airbnb_data:
@@ -94,13 +95,14 @@ def get_by_property_type(airbnb_data):
             room_type = row[14]
             accomodates = row[15]
             bathrooms = row[16]
-            bedrooms = row[17]
+            bedrooms = row[17]  
             beds = row[18]
             print(sep)
-            print(f"| {room_type:<12} | {accomodates:<11} | {bathrooms:<16} | {bedrooms:<10} | {beds:<10} |")    
-        else:
-            break
-    print(f"No property type '{property_type}' found!\nYou might want to check your spelling or enter another property type.")
+            print(f"| {room_type:<12} | {accomodates:<11} | {bathrooms:<16} | {bedrooms:<10} | {beds:<10} |") 
+       
+    if property_type != row[13]:
+        airbnb_tui.error(f"No property type '{property_type}' found!\nYou might want to check your spelling or enter another property type.")
+
             
 # function for own selection
 """
@@ -121,42 +123,41 @@ def by_location_superhost(airbnb_data):
     print("Enter the review rating e.g 4.60")
     review_rating = (input().strip())
             
-    # display to the user the selected values
+    # display to the user the selected values #\033[0m | \033[1m
     print("\nYour selections:")
-    print(f"{sep}\nLocation: {location}")
-    print(f"Superhost: {is_superhost}")
-    print(f"Review score rating: {review_rating}\n{sep}\n")
+    print(f"{sep}\nLocation: \033[1m{location}\033[0m")
+    print(f"Superhost: \033[1m{is_superhost}\033[0m")
+    print(f"Review score rating: \033[1m{review_rating}\033[0m\n{sep}\n")
             
     #create heading for the result
-    print(f"| {'host_id':<14} | {'host_name':<12} | {'review_scores_location':<20} | {'review_scores_value':<10} | {'instant_bookable':<10} |")
+    print(f"| \033[1m{'host_id':<14}\033[0m | \033[1m{'host_name':<12}\033[0m | \033[1m{'review_scores_location':<20}\033[0m | \033[1m{'review_scores_value':<10}\033[0m | \033[1m{'instant_bookable':<10}\033[0m |\n{sep}")
             
     # Select the needed rows
     for row in airbnb_data:
-        host_id = row[0]
-        host_name = row[3]
-        review_scores_rating = row[27]
-        review_scores_location = row[32]
-        review_scores_value = row[33]
-        instant_bookable = row[23]
+
         # check the conditions based on the user inputs
         if row[5] == location and row[27] == review_rating and row[9] == is_superhost:
-            print(sep)
-            print(f"| {host_id:<14} | {host_name:<12} | {review_scores_location:<22} | {review_scores_value:<19} | {instant_bookable:<14} |")
-#         else:
-#             break
-    #print(f"{sep}\nNo selection matching your search!\nYou can check your spelling or try different combinations.")
+            host_id = row[0]
+            host_name = row[3]
+            review_scores_rating = row[27]
+            review_scores_location = row[32]
+            review_scores_value = row[33]
+            instant_bookable = row[23]
+            print(f"| {host_id:<14} | {host_name:<12} | {review_scores_location:<22} | {review_scores_value:<19} | {instant_bookable:<14} |{sep}")
+    if (row[5] != location and row[27] == review_rating and row[9] == is_superhost)|(row[5] == location and row[27] != review_rating and row[9] == is_superhost)|(row[5] == location and row[27] == review_rating and row[9] != is_superhost):
+        airbnb_tui.error("\nNo selection matching your search!\nYou can check your spelling or different combinations.")
 
         
         
 # function to show the ten(10) most popular amenities
 def top_10_amenities(airbnb_data):
     amenities = airbnb_data['amenities'].to_list()
-    amenities = [eval(i) for i in amenities] #the previous function returns the list as a string, hence eval
+    amenities = [eval(amenity) for amenity in amenities] #the previous function returns the list as a string, hence eval
 
     # created a big list and appended all the items in the amenities into it.
     amenities_list = []
-    for i in amenities:
-        amenities_list.extend(i)
+    for amenity in amenities:
+        amenities_list.extend(amenity)
 
     # turn the list into a pandas series and count all items    
     count = pd.Series(amenities_list).value_counts().head(10)
@@ -210,13 +211,15 @@ def best_rating_price(df_airbnb):
     if best.empty:
         print(f'{location} not found!')
     # let the user see the display highlighting the overall rating and the price
-    best = best.style.background_gradient(cmap="Purples", low=0.30)
+    best = best.style.background_gradient(cmap="Purples", low=0.40)
     return best
 
 
 # let the user have a sense of the proportion of the number of bedrooms
-def merge(bedroom_list, num_bedroom_list):
-    
+def merge(df_airbnb):
+    bedroom_group = df_airbnb.groupby("bedrooms").size().sort_values(ascending=True)
+    bedroom_list = bedroom_group.index.tolist()
+    num_bedroom_list = bedroom_group.tolist()
     bedroom_group_tup = [(bedroom_list[i], num_bedroom_list[i]) for i in range(0, len(bedroom_list))]
     
     for i,j in bedroom_group_tup:

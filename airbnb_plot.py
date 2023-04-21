@@ -2,24 +2,23 @@
 import airbnb_tui
 import matplotlib.pyplot as plt
 import pandas as pd
-#import airbnb_process
-
  
 # function to plot the airbnb 
 def proportion_bedrooms(df_airbnb):
     bedroom_group = df_airbnb.groupby("bedrooms").size().sort_values(ascending=True)
     bedroom_list = bedroom_group.index.tolist()
     num_bedroom_list = bedroom_group.tolist()
-    fig = plt.figure(figsize=(7,9))
+    
+    fig = plt.figure(figsize=(8,14))
 
-    plt.pie(num_bedroom_list,labels=bedroom_list,autopct='%1.1f%%')
+    wedges, texts = plt.pie(num_bedroom_list, autopct='%1.1f%%', startangle=90)
+    labels = [bedroom_list for i,j in zip(bedroom_list, num_bedroom_list)]
     plt.title("Proportion of the Number of Bedrooms of Listings")
 
-    plt.legend(loc="best",bbox_to_anchor=(1,1))
+    plt.legend(wedges,labels,loc="best",bbox_to_anchor=(1,1),fontsize=12)
 
     plt.show()
-    #return a
-    #fig.savefig('proportion_bedrooms')
+    
 
 def num_listings_roomtype(df_airbnb):
     room_type_group = df_airbnb.groupby("room_type").size().sort_values(ascending=False)
@@ -31,7 +30,7 @@ def num_listings_roomtype(df_airbnb):
     # label
     plt.xlabel("Room Type")
     plt.ylabel("Number of Listing")
-    plt.yticks(range(0, 10000, 500))
+    plt.yticks(range(0, 10000, 500)) # to make reading the graph easier due to smaller values
     # set title
     plt.title("Number of Listing for Each Room Type")
     #show the graph
@@ -133,12 +132,12 @@ def prices_per_year(df_airbnb):
 def plot_top10_amenities(df_airbnb):
     # select the amenities column and cast to list
     amenities = df_airbnb['amenities'].to_list()
-    amenities = [eval(i) for i in amenities] #the previous function returns the list as a string, hence eval
+    amenities = [eval(amenity) for amenity in amenities] #the previous function returns the list as a string, hence eval
     
     # created a big list and appended all the items in the amenities into it.
     amenities_list = []
-    for i in amenities:
-        amenities_list.extend(i)
+    for amenity in amenities:
+        amenities_list.extend(amenity)
     count = pd.Series(amenities_list).value_counts().head(10)
     
     amenities = ["Smoke alarm", "Kitchen", "Essentials", "Wifi", "Iron", "Hangers", "Hot water", "Long stays", "Dishes & silverware", "Hair dryer"]
@@ -209,7 +208,8 @@ def own_selection_c(df_airbnb):
 
     # set titles and labels
     ax1.set(title="Best Months to Use Airbnb Based on Review Score Rating from 2019 to 2022",xlabel='Months',ylabel='Review Score Rating')
-
+    ax1.legend()
+    
     # axis 2
     # airbnb_dataset[["review_scores_accuracy", "minimum_nights"]]
     x = df_airbnb["review_scores_accuracy"]
