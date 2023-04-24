@@ -5,27 +5,32 @@ import pandas as pd
  
 # function to plot the airbnb 
 def proportion_bedrooms(df_airbnb):
+    # get the appropriate column and data
     bedroom_group = df_airbnb.groupby("bedrooms").size().sort_values(ascending=True)
     bedroom_list = bedroom_group.index.tolist()
     num_bedroom_list = bedroom_group.tolist()
     
+    # create the figure
     fig = plt.figure(figsize=(8,14))
-
-    wedges, texts = plt.pie(num_bedroom_list, autopct='%1.1f%%', startangle=90)
-    labels = [bedroom_list for i,j in zip(bedroom_list, num_bedroom_list)]
+    
+    # plot the pie chart,label and title
+    plt.pie(num_bedroom_list, labels=bedroom_list, autopct='%1.1f%%')
     plt.title("Proportion of the Number of Bedrooms of Listings")
-
-    plt.legend(wedges,labels,loc="best",bbox_to_anchor=(1,1),fontsize=12)
-
+    plt.legend(loc="best",bbox_to_anchor=(1,1),fontsize=8)
+    
+    # show the graph
     plt.show()
     
 
 def num_listings_roomtype(df_airbnb):
+    # get the appropriate column and data
     room_type_group = df_airbnb.groupby("room_type").size().sort_values(ascending=False)
     num_listing_room_type = room_type_group.tolist()
     room_type = room_type_group.index.tolist()
+    
+    # create the figure
     fig = plt.figure(figsize=(15,8))
-
+    # plot bar
     plt.bar(room_type,num_listing_room_type)
     # label
     plt.xlabel("Room Type")
@@ -72,6 +77,7 @@ def prices_per_year(df_airbnb):
     
     #Create figure, subplots and get the axes
     fig , (axis1,axis2,axis3,axis4) = plt.subplots(4,1, figsize = (12,15))
+    
 
     #Add title for entire figure
     fig.suptitle("Airbnb prices from 2019 - 2022")
@@ -160,9 +166,20 @@ def plot_top10_amenities(df_airbnb):
 I am interested in knowing whether the customers spend more nights in listings with high review scores and what affects the price of listings.
 """
 # own selection for question c
-def own_selection_c(df_airbnb):
+def own_selection_c():
+    df_airbnb = pd.read_csv("Data/Airbnb_UK_2022.csv")
     # convert the host_since column to a datetime
     df_airbnb["host_since"] = pd.to_datetime(df_airbnb["host_since"])
+    
+#     df_airbnb = df_airbnb.copy()
+#     df_airbnb["host_acceptance_rate"].str.rstrip("%").astype(float)
+
+    # define a lambda function to remove percent sign and convert to float
+    remove_percent = lambda x: float(x[:-1]) if x.endswith("%") else x
+
+    # apply the lambda function to the 'col1' column
+    df_airbnb['host_acceptance_rate'] = df_airbnb['host_acceptance_rate'].apply(remove_percent)
+    
     # filter year 2019
     year_2019 = df_airbnb.query("host_since >= '2019-01-01' and host_since <= '2019-12-31'")
     # filter year 2020
@@ -176,12 +193,19 @@ def own_selection_c(df_airbnb):
     review_year_2019 = year_2019.groupby(year_2019.host_since.dt.month)["review_scores_rating"].mean()
     review_year_2020 = year_2020.groupby(year_2020.host_since.dt.month)["review_scores_rating"].mean()
     review_year_2021 = year_2021.groupby(year_2021.host_since.dt.month)["review_scores_rating"].mean()
-    review_year_2022 = year_2022.groupby(year_2022.host_since.dt.month)["review_scores_rating"].mean()   
+    review_year_2022 = year_2022.groupby(year_2022.host_since.dt.month)["review_scores_rating"].mean() 
+    
+    #group the year by year and host_is_superhost and find the mean of the acceptance rate
+    acceptance_rate_2019 = year_2019.groupby([year_2019.host_since.dt.year,year_2019.host_is_superhost])["host_acceptance_rate"].mean().tolist()
+    acceptance_rate_2020 = year_2020.groupby([year_2020.host_since.dt.year,year_2020.host_is_superhost])["host_acceptance_rate"].mean().tolist()
+    acceptance_rate_2021 = year_2021.groupby([year_2021.host_since.dt.year,year_2021.host_is_superhost])["host_acceptance_rate"].mean().tolist()
+    acceptance_rate_2022 = year_2022.groupby([year_2022.host_since.dt.year,year_2022.host_is_superhost])["host_acceptance_rate"].mean().tolist()
 
     # adjust subplots
     plt.subplots_adjust(wspace=0.3,hspace=0.5)
     # create subplots
     fig = plt.figure(figsize=(25,20))
+    plt.figure(facecolor='yellow')
     #Add title for entire figure
     fig.suptitle("Customer behaviours")
     
@@ -246,8 +270,24 @@ def own_selection_c(df_airbnb):
     ax6.scatter(x,y)
     ax6.set(title="Relationship b/w Review Scores Location and Minimum Nights", xlabel='Review Scores Location',ylabel='Minimum Nights')
 
+    #axis 7
+    # comparison between super hosts and non super hosts regarding the acceptance rate
+    
+    is_not_super = [80.33,82.60,87.52,91.06] 
+    is_super = [92.17,93.36,91.05,91.06]
+    
+    X_axis = [1, 2, 3, 4]
+    width = 0.25
 
+    ax7.bar(X_axis, is_super, color='b', width=width, edgecolor='black', label='is_super')
+    ax7.bar([x + width for x in X_axis], is_not_super, color='r', width=width, edgecolor='black', label='is_not_super')
+
+    ax7.set(title="Acceptance rate in each year", xlabel="Year",ylabel ="Acceptance rate" )
+    ax7.set_xticks([x + width/2 for x in X_axis], [2019,2020,2021,2022])
+    ax7.legend(loc='upper center')
+    
     # show the graph
     plt.show()
     
+#     fig.savefig('Own_selection2.png')   
  

@@ -8,7 +8,7 @@ line_separator = "-" * 120
 # function to get the user's name and welcome the user to use the software
 def name_of_user():
     print("Please enter your name.")
-    name = input().capitalize()
+    name = input().title()
     print(f"\n Welcome {name}!\n You are ready to use Nwanneka's COM 728 Airbnb data software.\n")
 
 # start function to display the appropriate start message at the beginning of the program
@@ -49,13 +49,13 @@ def users_choice_of_program():
     while True:
         try:
             users_choice = input().upper().strip()
-            
+            # check the user's entry
             if users_choice in ["A", "B", "C", "EXIT"]:
                 break
             while users_choice not in ["A", "B", "C", "EXIT"]:
                 print("Enter A, B, C or EXIT")
                 break
-               
+        # handle any value error     
         except ValueError:
             print("The input was not an alphabet")         
     return users_choice
@@ -100,6 +100,7 @@ Enter \033[1mExit\033[0m to exit.
             while choice not in ['1','2','3','4','exit']:
                 print("Enter 1, 2, 3, 4 or Exit")
                 break
+        # except any value error
         except ValueError:
             print("The input was not a valid input.")
 
@@ -121,7 +122,7 @@ def menu2():
             
             # collect input from the user
             choice = input().strip().lower()
-            # check for conditions  \033[1m     \033[0m
+            # check for conditions  
             if choice == '1':
                 print(f"\033[1mIdentifying the top 10 most popular amenities or features that Airbnb hosts provide to customer...\n{line_separator}\033[0m\n")
                 break
@@ -185,7 +186,8 @@ Enter \033[1mExit\033[0m to exit
                 print(f"\033[1mDisplaying a visualisation of your choice to present the information from the Airbnb services or properties that can indicate customer behaviour or pattern...\n{line_separator}\033[0m\n")
                 break
             if choice == 'exit':
-                break            
+                break   
+            # check the user's entry, if not in the option continue to tell the user to make input
             while choice not in ['1','2','3','4','5','exit']:
                 print("Enter 1, 2, 3, 4, 5 or Exit")
                 break      
@@ -194,7 +196,7 @@ Enter \033[1mExit\033[0m to exit
 
     return choice  
     
-
+# menu in situation where the user wants to see more on proportion of bedroom
 def menu4():  
     while True:        
         print("""
@@ -212,14 +214,16 @@ def menu4():
 
             elif user_input == "No":
                 print("\033[1mShowing plot of the proportion of the number of bedrooms of listings...\033[0m")
-
+            # check the user's input
             while user_input not in ['Yes', 'No']:
                 print("Enter 'Yes' or 'No'")  
                 user_input = input().capitalize().strip()
         except ValueError:
             print("The input was not a valid input.")
         return user_input 
-        
+    
+    
+# menu if the user wants to see the plot of top 10 most popular amentities
 def menu5():
     while True:
         print("""
@@ -237,7 +241,7 @@ def menu5():
 
             elif user_input == "No":
                 print("\033[1mShowing the top 10 popular amenities...\033[0m")
-
+            # check the user's input
             while user_input not in ['Yes', 'No']:
                 print("Enter 'Yes' or 'No'")
                 user_input = input().capitalize().strip()
